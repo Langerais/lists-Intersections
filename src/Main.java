@@ -1,7 +1,6 @@
 import java.util.HashSet;
 
 
-//TODO: Make return type = ListNode[], in case there are multiple intersections;
 public class Main {
     public static void main(String[] args) {
 
@@ -90,7 +89,8 @@ public class Main {
         //printList(G1, H1); // Intersection at node 15
         //printList(I1, J1); // Intersection at node 3
 
-        ListNode answerNode = findIntersectionHashSet(A1, B1);
+        //ListNode answerNode = findIntersectionHashSet(A1, B1);
+        ListNode answerNode = findIntersectionsDoublePointer(A1, B1);
 
         if (answerNode == null) {
             System.out.println("No Intersections found!");
@@ -100,40 +100,65 @@ public class Main {
 
     }
 
-    public static ListNode findIntersectionHashSet(ListNode head1, ListNode head2){
-
+    public static ListNode findIntersectionHashSet(ListNode head1, ListNode head2) {
         printList(head1, head2);
 
         ListNode node1 = head1;
+
+        // Initialize a HashSet to store the values of the nodes from the first list
         HashSet<Integer> uniqueNodes = new HashSet<Integer>();
-        while (node1 != null){
+
+        // Traverse the first list (head1)
+        while (node1 != null) {
             uniqueNodes.add(node1.value);
             node1 = node1.next;
         }
 
         ListNode node2 = head2;
-        while (node2 != null){
-            if(uniqueNodes.contains(node2.value)) { return node2; }
+
+        // Traverse the second list (head2)
+        while (node2 != null) {
+            // Check if the value of the current node in list2 exists in the HashSet
+            if (uniqueNodes.contains(node2.value)) {
+                // If there's a match, return the current node from list2 (this is the intersection node)
+                return node2;
+            }
             node2 = node2.next;
         }
 
+        // If no intersection is found, return null
         return null;
     }
 
+
     public static ListNode findIntersectionsDoublePointer(ListNode head1, ListNode head2){
         printList(head1, head2);
+
         ListNode node1 = head1;
         ListNode node2 = head2;
 
         // Traverse both lists
-        while (node1 != node2) {
-            // Move pointerA to the head of listB once it reaches the end of listA
-            node1 = (node1 == null) ? head2 : node1.next;
-            // Move pointerB to the head of listA once it reaches the end of listB
-            node2 = (node2 == null) ? head1 : node2.next;
+        while (node1 != null && node2 != null) {
+            // If the values are the same, we have found the intersection
+            if (node1.value == node2.value) {
+                return node1; // Return the intersecting node by value
+            }
+
+            // Move pointer node1 to the next node in list1
+            node1 = node1.next;
+            // Move pointer node2 to the next node in list2
+            node2 = node2.next;
+
+            // If either pointer reaches the end of its list, reset it to the head of the other list
+            if (node1 == null) {
+                node1 = head2;
+            }
+            if (node2 == null) {
+                node2 = head1;
+            }
         }
 
-        return node1;
+        return null; // If no intersection found
     }
 
     // Utility function to print the lists
