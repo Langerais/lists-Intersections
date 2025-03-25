@@ -1,2 +1,9 @@
-package PACKAGE_NAME;public class ListNode {
+public class ListNode {
+    int value;
+    ListNode next;
+
+    ListNode(int value) {
+        this.value = value;
+        this.next = null;
+    }
 }
